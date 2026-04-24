@@ -199,6 +199,72 @@
     .footer-l { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray); }
     .footer-r { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray); }
 
+    /* IMPACT STRIP */
+    .impact-strip {
+      padding: 72px 48px;
+      background: linear-gradient(180deg, #0a0f0a 0%, #0d1410 50%, #0a0a0f 100%);
+      border-bottom: 1px solid rgba(0,200,81,0.12);
+      border-top: 1px solid rgba(0,200,81,0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .impact-strip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0,200,81,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .impact-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--green);
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      opacity: 0.7;
+    }
+    .impact-dot { width: 4px; height: 4px; background: var(--green); border-radius: 50%; display: inline-block; }
+    .impact-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(28px, 4vw, 48px);
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 56px;
+      letter-spacing: 0.03em;
+    }
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(0,200,81,0.08);
+      border: 1px solid rgba(0,200,81,0.12);
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 1100px;
+      margin: 0 auto 48px;
+    }
+    .impact-cell { background: rgba(10,15,10,0.95); padding: 40px 32px; text-align: center; transition: background 0.3s; }
+    .impact-cell:hover { background: rgba(0,200,81,0.04); }
+    .impact-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 5vw, 72px);
+      line-height: 1;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+    .impact-unit { font-size: 0.55em; color: rgba(0,200,81,0.6); margin-left: 4px; }
+    .impact-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--white); text-transform: uppercase; margin-bottom: 8px; }
+    .impact-sub { font-size: 12px; color: rgba(136,136,153,0.7); line-height: 1.5; }
+    .impact-footer { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .impact-verified { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(0,200,81,0.6); letter-spacing: 0.08em; }
+    .impact-sep { color: rgba(0,200,81,0.2); font-size: 12px; }
+
     /* RESPONSIVE */
     @media (max-width: 900px) {
       nav, .hero, .section { padding-left: 24px; padding-right: 24px; }
@@ -211,6 +277,11 @@
       .cycle-grid { grid-template-columns: 80px 1fr; }
       .cycle-status { display: none; }
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
+      .impact-strip { padding: 48px 24px; }
+      .impact-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .impact-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -253,6 +324,54 @@
     <div class="problem-label">Manhattan · August 2024 · Primary Field Research</div>
     <div class="problem-title">This Is The Problem.</div>
     <div class="problem-sub">Two Honda EU2200i. Chained to a hydrant. Every single day.</div>
+  </div>
+</div>
+
+<!-- IMPACT COUNTER -->
+<div class="impact-strip" id="impactStrip">
+  <div class="impact-eyebrow">
+    <span class="impact-dot"></span>
+    OCPP-Verified · Certified Renewable · Zero Greenwashing
+    <span class="impact-dot"></span>
+  </div>
+  <div class="impact-headline">Annual Impact — Full NYC Deployment</div>
+  <div class="impact-grid">
+    <div class="impact-cell" data-target="73700" data-decimals="0">
+      <div class="impact-number"><span class="counter">0</span><span class="impact-unit">t</span></div>
+      <div class="impact-label">CO₂ Avoided</div>
+      <div class="impact-sub">Tonnes per year<br>Scope 1 elimination</div>
+    </div>
+    <div class="impact-cell" data-target="3510" data-decimals="0">
+      <div class="impact-number"><span class="counter">0</span><span class="impact-unit">k</span></div>
+      <div class="impact-label">Tree Equivalents</div>
+      <div class="impact-sub">per year<br>at 21 kg CO₂/tree</div>
+    </div>
+    <div class="impact-cell" data-target="16.8" data-decimals="1">
+      <div class="impact-number"><span class="counter">0</span><span class="impact-unit">M gal</span></div>
+      <div class="impact-label">Gasoline Eliminated</div>
+      <div class="impact-sub">per year<br>zero combustion</div>
+    </div>
+    <div class="impact-cell" data-target="67" data-decimals="0">
+      <div class="impact-number"><span class="counter">0</span><span class="impact-unit">M h</span></div>
+      <div class="impact-label">Generator Hours Killed</div>
+      <div class="impact-sub">23,000 carts<br>8h/day · 365 days</div>
+    </div>
+  </div>
+  <div class="impact-footer">
+    <span class="impact-verified">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="#00c851" stroke-width="1"/><path d="M3.5 6l1.8 1.8 3.2-3.6" stroke="#00c851" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Each swap logged via AMPECO CPMS over OCPP
+    </span>
+    <span class="impact-sep">·</span>
+    <span class="impact-verified">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="#00c851" stroke-width="1"/><path d="M3.5 6l1.8 1.8 3.2-3.6" stroke="#00c851" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      DOHMH commissary log auto-generated
+    </span>
+    <span class="impact-sep">·</span>
+    <span class="impact-verified">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="#00c851" stroke-width="1"/><path d="M3.5 6l1.8 1.8 3.2-3.6" stroke="#00c851" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Identical stack deployed professionally at scale
+    </span>
   </div>
 </div>
 
@@ -661,7 +780,7 @@
     <div class="card-title" style="font-size:24px; margin-bottom:8px;">Let's talk.</div>
     <p class="card-desc" style="margin-bottom:24px;">Climate Reality Leader · German Solar Prize 2019<br>Troisdorf, Germany · Manhattan annually</p>
     <a href="mailto:bodo@be-eclectic.com" style="display:inline-flex; align-items:center; gap:10px; background:var(--orange); color:var(--dark); padding:14px 28px; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.1em; border-radius:2px; text-decoration:none; font-weight:500; margin-bottom:16px;">
-      <span class="__cf_email__" data-cfemail="ceaca1aaa18eacabe3abada2abadbaa7ade0ada1a3">[email&#160;protected]</span> →
+      bodo@be-eclectic.com →
     </a>
     <br>
     <a href="https://www.linkedin.com/in/bodo-becker-climate-leader/" target="_blank" style="display:inline-flex; align-items:center; gap:8px; color:var(--orange); font-family:'DM Mono',monospace; font-size:11px; text-decoration:none; letter-spacing:0.1em; margin-top:8px;">
@@ -742,6 +861,40 @@
     document.body.style.overflow = '';
   }
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePdf(); });
+
+  // Impact Counter — animated count-up on scroll
+  (function() {
+    const strip = document.getElementById('impactStrip');
+    if (!strip) return;
+    let triggered = false;
+    function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+    function animateCounter(el, target, decimals, duration) {
+      const start = performance.now();
+      function step(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const val = easeOutQuart(progress) * target;
+        el.textContent = decimals > 0 ? val.toFixed(decimals) : Math.round(val).toLocaleString();
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = decimals > 0 ? target.toFixed(decimals) : target.toLocaleString();
+      }
+      requestAnimationFrame(step);
+    }
+    function runCounters() {
+      if (triggered) return;
+      triggered = true;
+      strip.querySelectorAll('.impact-cell').forEach((cell, i) => {
+        const target = parseFloat(cell.dataset.target);
+        const decimals = parseInt(cell.dataset.decimals) || 0;
+        setTimeout(() => animateCounter(cell.querySelector('.counter'), target, decimals, 1800), i * 130);
+      });
+    }
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) runCounters();
+    }, { threshold: 0.3 });
+    observer.observe(strip);
+  })();
+
+
 
   // Formspree handler
   const form = document.getElementById('contactForm');
