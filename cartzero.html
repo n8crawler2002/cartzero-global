@@ -200,64 +200,15 @@
     .footer-r { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray); }
 
     /* IMPACT STRIP */
-    .impact-strip {
-      padding: 72px 48px;
-      background: linear-gradient(180deg, #0a0f0a 0%, #0d1410 50%, #0a0a0f 100%);
-      border-bottom: 1px solid rgba(0,200,81,0.12);
-      border-top: 1px solid rgba(0,200,81,0.12);
-      position: relative;
-      overflow: hidden;
-    }
-    .impact-strip::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0,200,81,0.04) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .impact-eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.3em;
-      color: var(--green);
-      text-transform: uppercase;
-      text-align: center;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      opacity: 0.7;
-    }
+    .impact-strip { padding: 72px 48px; background: linear-gradient(180deg, #0a0f0a 0%, #0d1410 50%, #0a0a0f 100%); border-bottom: 1px solid rgba(0,200,81,0.12); border-top: 1px solid rgba(0,200,81,0.12); position: relative; overflow: hidden; }
+    .impact-strip::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0,200,81,0.04) 0%, transparent 70%); pointer-events: none; }
+    .impact-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--green); text-transform: uppercase; text-align: center; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 16px; opacity: 0.7; }
     .impact-dot { width: 4px; height: 4px; background: var(--green); border-radius: 50%; display: inline-block; }
-    .impact-headline {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(28px, 4vw, 48px);
-      color: var(--white);
-      text-align: center;
-      margin-bottom: 56px;
-      letter-spacing: 0.03em;
-    }
-    .impact-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: rgba(0,200,81,0.08);
-      border: 1px solid rgba(0,200,81,0.12);
-      border-radius: 4px;
-      overflow: hidden;
-      max-width: 1100px;
-      margin: 0 auto 48px;
-    }
+    .impact-headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 4vw, 48px); color: var(--white); text-align: center; margin-bottom: 56px; letter-spacing: 0.03em; }
+    .impact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(0,200,81,0.08); border: 1px solid rgba(0,200,81,0.12); border-radius: 4px; overflow: hidden; max-width: 1100px; margin: 0 auto 48px; }
     .impact-cell { background: rgba(10,15,10,0.95); padding: 40px 32px; text-align: center; transition: background 0.3s; }
     .impact-cell:hover { background: rgba(0,200,81,0.04); }
-    .impact-number {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(48px, 5vw, 72px);
-      line-height: 1;
-      color: var(--green);
-      margin-bottom: 12px;
-    }
+    .impact-number { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 5vw, 72px); line-height: 1; color: var(--green); margin-bottom: 12px; }
     .impact-unit { font-size: 0.55em; color: rgba(0,200,81,0.6); margin-left: 4px; }
     .impact-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--white); text-transform: uppercase; margin-bottom: 8px; }
     .impact-sub { font-size: 12px; color: rgba(136,136,153,0.7); line-height: 1.5; }
@@ -329,11 +280,7 @@
 
 <!-- IMPACT COUNTER -->
 <div class="impact-strip" id="impactStrip">
-  <div class="impact-eyebrow">
-    <span class="impact-dot"></span>
-    OCPP-Verified · Certified Renewable · Zero Greenwashing
-    <span class="impact-dot"></span>
-  </div>
+  <div class="impact-eyebrow"><span class="impact-dot"></span>OCPP-Verified · Certified Renewable · Zero Greenwashing<span class="impact-dot"></span></div>
   <div class="impact-headline">Annual Impact — Full NYC Deployment</div>
   <div class="impact-grid">
     <div class="impact-cell" data-target="73700" data-decimals="0">
@@ -358,20 +305,13 @@
     </div>
   </div>
   <div class="impact-footer">
-    <span class="impact-verified">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="#00c851" stroke-width="1"/><path d="M3.5 6l1.8 1.8 3.2-3.6" stroke="#00c851" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Each swap logged via AMPECO CPMS over OCPP
-    </span>
+    <span class="impact-verified"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="#00c851" stroke-width="1"/><path d="M3.5 6l1.8 1.8 3.2-3.6" stroke="#00c851" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Each swap logged via AMPECO CPMS over OCPP</span>
     <span class="impact-sep">·</span>
-    <span class="impact-verified">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="#00c851" stroke-width="1"/><path d="M3.5 6l1.8 1.8 3.2-3.6" stroke="#00c851" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      DOHMH commissary log auto-generated
-    </span>
+    <span class="impact-verified"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="#00c851" stroke-width="1"/><path d="M3.5 6l1.8 1.8 3.2-3.6" stroke="#00c851" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>DOHMH commissary log auto-generated</span>
     <span class="impact-sep">·</span>
-    <span class="impact-verified">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="#00c851" stroke-width="1"/><path d="M3.5 6l1.8 1.8 3.2-3.6" stroke="#00c851" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Identical stack deployed professionally at scale
-    </span>
+    <span class="impact-verified"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="#00c851" stroke-width="1"/><path d="M3.5 6l1.8 1.8 3.2-3.6" stroke="#00c851" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Identical stack deployed professionally at scale</span>
+    <span class="impact-sep">·</span>
+    <a href="impact-map.html" style="display:inline-flex; align-items:center; gap:6px; font-family:'DM Mono',monospace; font-size:10px; color:var(--green); letter-spacing:0.12em; text-decoration:none; border:1px solid rgba(0,200,81,0.3); padding:6px 14px; border-radius:2px; transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(0,200,81,0.7)'" onmouseout="this.style.borderColor='rgba(0,200,81,0.3)'">⚡ VIEW LIVE IMPACT MAP →</a>
   </div>
 </div>
 
@@ -677,12 +617,24 @@
         <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; color:var(--orange); text-transform:uppercase; margin-bottom:8px;">Speaking & Events</div>
         <div class="speaking">
           <div class="speaking-item">
-            <div class="speaking-year">TBD</div>
-            <div class="speaking-event"><strong>[Conference Name]</strong> — [City], [Year]</div>
+            <div class="speaking-year">2019</div>
+            <div class="speaking-event"><strong>VKU-Stadtwerkekongress</strong> — Kassel</div>
           </div>
           <div class="speaking-item">
-            <div class="speaking-year">TBD</div>
-            <div class="speaking-event"><strong>[Conference Name]</strong> — [City], [Year]</div>
+            <div class="speaking-year">2018</div>
+            <div class="speaking-event"><strong>House of Energy Kongress</strong> — Frankfurt</div>
+          </div>
+          <div class="speaking-item">
+            <div class="speaking-year">2017</div>
+            <div class="speaking-event"><strong>BSW – Bundesverband Solarwirtschaft e.V.</strong> — Frankfurt am Main</div>
+          </div>
+          <div class="speaking-item">
+            <div class="speaking-year">2012</div>
+            <div class="speaking-event"><strong>Concentrating Solar Power in Europe, the Middle East and North Africa</strong> — Madrid</div>
+          </div>
+          <div class="speaking-item">
+            <div class="speaking-year">2011</div>
+            <div class="speaking-event"><strong>Dii Desert Energy Leadership Summit</strong> — Cairo</div>
           </div>
         </div>
       </div>
@@ -862,7 +814,7 @@
   }
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePdf(); });
 
-  // Impact Counter — animated count-up on scroll
+  // Impact Counter
   (function() {
     const strip = document.getElementById('impactStrip');
     if (!strip) return;
@@ -880,21 +832,15 @@
       requestAnimationFrame(step);
     }
     function runCounters() {
-      if (triggered) return;
-      triggered = true;
+      if (triggered) return; triggered = true;
       strip.querySelectorAll('.impact-cell').forEach((cell, i) => {
         const target = parseFloat(cell.dataset.target);
         const decimals = parseInt(cell.dataset.decimals) || 0;
         setTimeout(() => animateCounter(cell.querySelector('.counter'), target, decimals, 1800), i * 130);
       });
     }
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) runCounters();
-    }, { threshold: 0.3 });
-    observer.observe(strip);
+    new IntersectionObserver(e => { if (e[0].isIntersecting) runCounters(); }, { threshold: 0.3 }).observe(strip);
   })();
-
-
 
   // Formspree handler
   const form = document.getElementById('contactForm');
