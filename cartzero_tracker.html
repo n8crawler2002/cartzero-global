@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CartZero — Project Tracker</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0e0e0e;
+  --surface: #161616;
+  --surface2: #1e1e1e;
+  --border: #2a2a2a;
+  --border2: #333;
+  --text: #e8e8e8;
+  --text2: #888;
+  --text3: #555;
+  --green: #00c48c;
+  --amber: #f5a623;
+  --red: #e24b4a;
+  --blue: #4b9cf5;
+  --purple: #9b8fe8;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+}
+
+body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+
+#app { max-width: 1600px; margin: 0 auto; padding: 1.5rem; }
+
+.header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.25rem; }
+.header h1 { font-size: 15px; font-weight: 500; letter-spacing: .02em; }
+.header h1 span { color: var(--green); font-family: var(--mono); }
+.header small { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+
+.timebar {
+  display: flex; gap: 0; margin-bottom: 1.25rem;
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+.ti { flex: 1; padding: 10px 14px; border-right: 1px solid var(--border); }
+.ti:last-child { border-right: none; flex: 3; display: flex; align-items: center; }
+.tv { font-size: 20px; font-weight: 600; color: var(--text); font-family: var(--mono); }
+.tl { font-size: 10px; color: var(--text3); margin-top: 1px; letter-spacing: .04em; text-transform: uppercase; }
+.tn { font-size: 11px; color: var(--text3); line-height: 1.5; padding: 0 4px; }
+
+.stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 1.25rem; }
+.st { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; text-align: center; }
+.sn { font-size: 18px; font-weight: 600; font-family: var(--mono); }
+.sl { font-size: 10px; color: var(--text3); margin-top: 2px; letter-spacing: .04em; text-transform: uppercase; }
+.st:nth-child(1) .sn { color: var(--blue); }
+.st:nth-child(2) .sn { color: var(--amber); }
+.st:nth-child(3) .sn { color: var(--purple); }
+.st:nth-child(4) .sn { color: var(--green); }
+.st:nth-child(5) .sn { color: var(--text3); }
+
+.board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; align-items: start; }
+
+.col { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+.coh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.cot { font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text2); font-family: var(--mono); }
+.coc { font-size: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 1px 7px; color: var(--text3); font-family: var(--mono); }
+
+.cards { display: flex; flex-direction: column; gap: 5px; min-height: 28px; }
+
+.card { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 9px; cursor: pointer; transition: border-color .12s, background .12s; }
+.card:hover { border-color: var(--border2); background: #222; }
+.ct { font-size: 11.5px; font-weight: 400; line-height: 1.4; margin-bottom: 5px; color: var(--text); }
+.cm { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.hi { background: var(--red); }
+.mi { background: var(--amber); }
+.lo { background: var(--green); }
+.tag { font-size: 9.5px; padding: 2px 6px; border-radius: 3px; font-weight: 500; font-family: var(--mono); letter-spacing: .02em; }
+.yc  { background: rgba(75,156,245,.15); color: #6db3f8; border: 1px solid rgba(75,156,245,.2); }
+.out { background: rgba(245,166,35,.12); color: #f5b84a; border: 1px solid rgba(245,166,35,.2); }
+.pro { background: rgba(0,196,140,.12); color: #00c48c; border: 1px solid rgba(0,196,140,.2); }
+.cli { background: rgba(155,143,232,.12); color: #b3a8f0; border: 1px solid rgba(155,143,232,.2); }
+.res { background: rgba(160,160,255,.1); color: #9898e8; border: 1px solid rgba(160,160,255,.15); }
+.leg { background: rgba(226,75,74,.12); color: #f07070; border: 1px solid rgba(226,75,74,.2); }
+.cd { font-size: 9.5px; color: var(--text3); margin-top: 3px; font-family: var(--mono); }
+
+.addbtn { width: 100%; margin-top: 6px; padding: 5px; font-size: 11px; color: var(--text3); background: transparent; border: 1px dashed var(--border); border-radius: 5px; cursor: pointer; font-family: var(--sans); }
+.addbtn:hover { border-color: var(--border2); color: var(--text2); }
+
+/* MODAL */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(2px); }
+.modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 1.25rem; width: 340px; max-height: 88vh; overflow-y: auto; }
+.modal h3 { font-size: 13px; font-weight: 500; margin-bottom: 1rem; color: var(--text); }
+.fl { margin-bottom: 11px; }
+.fl label { display: block; font-size: 10px; color: var(--text3); margin-bottom: 3px; letter-spacing: .04em; text-transform: uppercase; font-family: var(--mono); }
+.fl input, .fl textarea, .fl select { width: 100%; font-size: 12px; padding: 7px 9px; border: 1px solid var(--border2); border-radius: 5px; background: var(--surface2); color: var(--text); font-family: var(--sans); }
+.fl textarea { resize: vertical; min-height: 60px; }
+.fl select option { background: var(--surface2); }
+.ma { display: flex; gap: 6px; margin-top: 1rem; justify-content: flex-end; align-items: center; }
+.mal { margin-right: auto; }
+.bp { padding: 6px 12px; font-size: 11px; font-weight: 500; border-radius: 5px; background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); cursor: pointer; font-family: var(--sans); }
+.bp:hover { color: var(--text); border-color: #444; }
+.bd { padding: 6px 12px; font-size: 11px; border-radius: 5px; background: transparent; border: 1px solid var(--border); color: #e07070; cursor: pointer; }
+.bd:hover { background: rgba(226,75,74,.1); }
+.bc { padding: 6px 12px; font-size: 11px; border-radius: 5px; background: transparent; border: 1px solid var(--border); color: var(--blue); cursor: pointer; }
+.bc:hover { background: rgba(75,156,245,.1); }
+.mr { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.mb { font-size: 10px; padding: 2px 8px; border-radius: 3px; border: 1px solid var(--border); background: var(--surface2); color: var(--text3); cursor: pointer; font-family: var(--mono); }
+.mb:hover { border-color: var(--border2); color: var(--text2); }
+.mb.ac { border-color: var(--green); color: var(--green); background: rgba(0,196,140,.08); }
+.ch { font-size: 10px; color: var(--text3); margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <h1><span>CartZero</span> — Project Tracker</h1>
+    <small id="ls">not saved yet</small>
+  </div>
+  <div class="timebar">
+    <div class="ti"><div class="tv">50</div><div class="tl">Tickets</div></div>
+    <div class="ti"><div class="tv">~80h</div><div class="tl">Human-equiv.</div></div>
+    <div class="ti"><div class="tv">22</div><div class="tl">Done</div></div>
+    <div class="ti"><div class="tv">17</div><div class="tl">New (Merge)</div></div>
+    <div class="ti"><div class="tn">33 existing + 17 new · 18 Duplikate entfernt · Seit 29. März 2026</div></div>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="board" id="board"></div>
+</div>
+
+<div id="ov" class="overlay" style="display:none">
+  <div class="modal">
+    <h3 id="mt">Task</h3>
+    <div class="fl"><label>Title</label><input id="ft" type="text"/></div>
+    <div class="fl"><label>Notes</label><textarea id="fn"></textarea></div>
+    <div class="fl"><label>Category</label>
+      <select id="fc">
+        <option value="yc">YC</option><option value="out">Outreach</option>
+        <option value="pro">Product</option><option value="cli">Climate</option>
+        <option value="res">Research</option><option value="leg">Legal</option>
+      </select>
+    </div>
+    <div class="fl"><label>Priority</label>
+      <select id="fp"><option value="hi">High</option><option value="mi">Medium</option><option value="lo">Low</option></select>
+    </div>
+    <div class="fl"><label>Date</label><input id="fd" type="text" placeholder="e.g. May 4, 2026"/></div>
+    <div class="fl"><label>Column</label><div class="mr" id="mr"></div></div>
+    <div class="ch" id="ch" style="display:none">Duplicate → Zielspalte wählen → "Duplicate"</div>
+    <div class="ma">
+      <div class="mal"><button class="bd" onclick="del()">🗑 Delete</button></div>
+      <button class="bp" onclick="cls()">Cancel</button>
+      <button class="bp" style="color:var(--green);border-color:rgba(0,196,140,.3)" onclick="sav()">Save</button>
+    </div>
+    <div id="duprow" style="display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+      <button class="bc" style="width:100%;padding:7px" onclick="dup()">⧉ Duplicate → choose column above, then click here</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLS=[{id:'todo',l:'To do'},{id:'doing',l:'In progress'},{id:'wait',l:'Waiting'},{id:'done',l:'Done'},{id:'park',l:'Parked'}];
+const CATS={yc:'YC',out:'Outreach',pro:'Product',cli:'Climate',res:'Research',leg:'Legal'};
+
+const SEED=[
+  // DONE
+  {id:'d01',col:'done',t:'YC S2026 Application — eingereicht',c:'yc',p:'hi',d:'2026-03-29',n:'Submitted March 29. Decision deadline May 4. Update Email vorbereitet.'},
+  {id:'d02',col:'done',t:'cartzero.html — live on GitHub Pages',c:'pro',p:'hi',d:'2026-03-29',n:'Password: 20_CartZero_26. Cloudflare email fix, Impressum §5 TMG, Demo Video embed, PDF overlay, Impact Counter, Speaking Section (5 entries), Map Teaser. Linked zu impact-map.html.'},
+  {id:'d03',col:'done',t:'impact-map.html — Electrified Block NYC',c:'pro',p:'hi',d:'2026-04-22',n:'Separate subpage. SVG Map alle 5 Boroughs, District Leaderboard, Pulse Dots, Live Clock. Linked from Impact Strip.'},
+  {id:'d04',col:'done',t:'"Das Laminat" — CartZero_v5_FINAL.docx',c:'yc',p:'hi',d:'2026-03-29',n:'Definitive application artifact. Exec Summary + alle Sektionen. Basis für alle weiteren Dokumente.'},
+  {id:'d05',col:'done',t:'CartZero_Technical_Appendix_v4.docx',c:'pro',p:'mi',d:'2026-03-29',n:'LiFePO4 Specs, AMPECO CPMS, OCPP Stack, Gen 1–3 Roadmap, CAPEX/OPEX, UL 9540/1487.'},
+  {id:'d06',col:'done',t:'CartZero_Outreach_MASTER_2026.xlsx',c:'out',p:'hi',d:'2026-03-29',n:'7-Sheet Outreach-Datenbank. City Hall, Vendor Prioritäten, Commissary Contacts, Intelligence.'},
+  {id:'d07',col:'done',t:'CartZero_Commissary_Hubs.xlsx',c:'res',p:'hi',d:'2026-03-29',n:'69 Commissaries mit Adressen und Telefonnummern. Aus NYC Open Data / DOHMH.'},
+  {id:'d08',col:'done',t:'CartZero_Intelligence_MASTER.xlsx',c:'res',p:'hi',d:'2026-03-29',n:'Regulatory intelligence, pitch arsenal, 10 Quellen (Auerbach 2024, DOHMH, SVP Survey, OneNYC 2050 etc.), Open Questions.'},
+  {id:'d09',col:'done',t:'CartZero_Outreach_NYC_Data.xlsx',c:'out',p:'hi',d:'2026-03-29',n:'85,806 DOHMH Violations Records. 19 Gold/Platinum Targets mit auto-generierten Pitch-Openers.'},
+  {id:'d10',col:'done',t:'Demo Video 47s — YouTube Unlisted',c:'pro',p:'hi',d:'2026-04-15',n:'YouTube ID: 9UXzPM8SMnk. Embedded cartzero.html + YC Portal. CapCut, Reverse-Playback-Fix.'},
+  {id:'d11',col:'done',t:'P&L Modell XLSX — 36-Month',c:'pro',p:'hi',d:'2026-04-07',n:'428 Formeln. Assumptions, P&L, Scenarios/DOE, Summary. Blended $191/mo. Breakeven ~Mo 30.'},
+  {id:'d12',col:'done',t:'Block Captain Referral Program — designed',c:'pro',p:'hi',d:'2026-04-16',n:'Bronze→Platinum (1–4 free months), Cap 6 Mo / 12 Mo rolling, 30-day cliff. CAC payback 1.6–3 Mo. 3 Design-Fragen offen bis Pilot.'},
+  {id:'d13',col:'done',t:'Gamification Dreiklang — designed',c:'pro',p:'mi',d:'2026-04-24',n:'Layer 1: WhatsApp/SMS + QR. Layer 2: Electrified Block Karte (50% = Block-Status). Layer 3: Public NYC Dashboard. Alle Daten live aus AMPECO.'},
+  {id:'d14',col:'done',t:'CartZero_ClimateWeek_2026_v1.2.pptx',c:'cli',p:'hi',d:'2026-04-22',n:'16 Slides. A5: 46,000t CO₂ invisible source. "Every swap = a measured CO₂ avoidance event. Auditable. Certifiable. Tradeable."'},
+  {id:'d15',col:'done',t:'JP Morgan Tipping Points — gescreent',c:'res',p:'mi',d:'2026-04-22',n:'Penicillin-Analogie, 5% Banks mit Tipping-Point-Integration. In PPTX v1.2 integriert. LinkedIn Post Text fertig.'},
+  {id:'d16',col:'done',t:'City Climate Action Guidebook + Checklist — gescreent',c:'res',p:'mi',d:'2026-04-22',n:'Beide PDFs gescreent. Verwertbar für CartZero Argumentationskette und Climate Week Pitch.'},
+  {id:'d17',col:'done',t:'FOIL Request NYC Parks — eingereicht',c:'res',p:'hi',d:'2026-04-26',n:'a860-openrecords.nyc.gov. Bid amounts + identities 8 BCS Central Park Locations. Bestätigung erhalten. Reply-To: foil@parks.nyc.gov.'},
+  {id:'d18',col:'done',t:'Neal Kemkar (Ceres) — LinkedIn Message gesendet',c:'out',p:'hi',d:'2026-04-26',n:'Gemeinsame Gruppe "Climate Change / ESG Professionals". Ziel: Ceres Sept 23 Invite-Only Event (Convene, 75 Rockefeller Plaza).'},
+  {id:'d19',col:'done',t:'BCS Standort Intel XLSX — erstellt',c:'res',p:'mi',d:'2026-04-26',n:'8 BCS Standorte, Cart-Typen, Generator-Setup, Fuel-Kosten, Bid Premium Rechner, FOIL Tracker. Street View + Yelp Research alle Locations.'},
+  {id:'d20',col:'done',t:'Javier (PowerMBA NYC) — LinkedIn Message drafted',c:'out',p:'mi',d:'2026-04-26',n:'Sr. Field Marketing Manager Thoropass. PowerMBA Ambassador NYC. Ziel: Pitch-Opportunities Climate Week. Option B (kein Domänen-Claim).'},
+  {id:'d21',col:'done',t:'Rita Brief — drafted',c:'out',p:'hi',d:'2026-04-24',n:'Persönlicher Brief. Jogging-Moment als Einstieg. Schritt 2: cartzero.html + Briefing für NYC-Kontaktin (retiree, Ex-Top-Management, gut vernetzt).'},
+  {id:'d22',col:'done',t:'ClimaTech Boston 2026 — Booth Copy drafted',c:'cli',p:'mi',d:'2026-04-09',n:'Company Description + Short Description fertig. Complimentary via Consulate General Germany Boston. Bodo fährt nicht hin — zu teuer.'},
+  // WAITING
+  {id:'w01',col:'wait',t:'YC S2026 — Interview oder Reject',c:'yc',p:'hi',d:'Mai 4, 2026',n:'Deadline Mai 4. Update Email geht am selben Tag raus. May the 4th be with you.'},
+  {id:'w02',col:'wait',t:'Carina Kaufman-Gutierrez — LinkedIn Connection pending',c:'out',p:'hi',d:'',n:'NYC Office of Street Vendor Services (Mamdani Admin). Connection gesendet. Fallback: LinkedIn InMail. Warm Intro zu Shapiro folgt danach.'},
+  {id:'w03',col:'wait',t:'FOIL Request NYC Parks — Response pending',c:'res',p:'hi',d:'~2 weeks',n:'Eingereicht 2026-04-26. Acknowledgement ~5 Werktage. Unterlagen 2–4 Wochen. Nachhaken frühestens +5 Werktage.'},
+  {id:'w04',col:'wait',t:'Neal Kemkar (Ceres) — Response pending',c:'out',p:'hi',d:'',n:'LinkedIn Message gesendet April 26. Ziel: Einladung Ceres Sept 23 (Convene, 75 Rockefeller, Mainstage + private Partner Reception, investor-facing).'},
+  {id:'w05',col:'wait',t:'FOIL-Daten → BCS Excel updaten',c:'res',p:'mi',d:'Nach FOIL-Antwort',n:'Sheet 3 FOIL Tracker befüllen. Gap Gewinner→2. Platz berechnen. CartZero Hebel pro Standort.'},
+  // TODO
+  {id:'t01',col:'todo',t:'YC Update Email — senden Mai 4',c:'yc',p:'hi',d:'May 4, 2026',n:'Draft fertig. Carina, SVP, Block Captain, Gamification, Climate Week. Einmal, knapp, datengetrieben.'},
+  {id:'t02',col:'todo',t:'Rita Brief — senden',c:'out',p:'hi',d:'',n:'Brief fertig. Schritt 2 nach Antwort: cartzero.html + Briefing für NYC-Kontaktin (Stay + Pitch Venue).'},
+  {id:'t03',col:'todo',t:'Javier (PowerMBA NYC) — Message senden',c:'out',p:'mi',d:'',n:'Draft fertig. Ziel: Pitch-Opportunities Climate Week NYC September.'},
+  {id:'t04',col:'todo',t:'LinkedIn Post — JP Morgan — publishen',c:'cli',p:'mi',d:'',n:'Text fertig. Kurz, kein CartZero. Erst Bühne bauen. Offen: Jetzt oder nach YC-Ergebnis?'},
+  {id:'t05',col:'todo',t:'SVP / Mohamed Attia — Outreach',c:'out',p:'hi',d:'Nach May 4',n:'Battery Pilot seit 2021 (10 Vendors). CartZero: Swap via Commissary vs. stationäres Laden. Erst nach YC-Ergebnis.'},
+  {id:'t06',col:'todo',t:'Matthew Shapiro (SVP Legal) — Warm Intro',c:'leg',p:'hi',d:'Nach Carina Connect',n:'Kein LinkedIn. Intro durch Carina. Urban Justice Center / Street Vendor Project.'},
+  {id:'t07',col:'todo',t:'Nest Climate Campus — Submission',c:'cli',p:'hi',d:'Late April/Mai 2026',n:'Javits Center, 22.–24. September. Co-Hosting Modell. Energy Transition + Urban Infrastructure. Submission Window: JETZT.'},
+  {id:'t08',col:'todo',t:'NYC Parks Revenue Division — BCS Owner-Kontakt',c:'out',p:'hi',d:'Diese Woche',n:'+1 (212) 360-3406. EST = DE −6h. Best slot: 14–17 Uhr DE. "I am trying to reach the owner of Big City Snacks Inc."'},
+  {id:'t09',col:'todo',t:'Big City Snacks — Discovery Talk',c:'out',p:'hi',d:'Nach Owner-Kontakt',n:'10-15 45th Ave LIC = Commissary. Fuel-Cost + Bid Premium validieren. "Tell me where I am wrong." Contract Renewal 12/31/2026 als Hook.'},
+  {id:'t10',col:'todo',t:'A&S Food and Fruit Service — Outreach',c:'out',p:'mi',d:'',n:'5 Permits (Riverside Park 3x, CP E70, Washington Square). 36-05 29th St Astoria. Pilot-Priorität 2 nach BCS.'},
+  {id:'t11',col:'todo',t:'Validation Deck — BCS Pitch aufbauen',c:'pro',p:'hi',d:'Vor Discovery Talk',n:'Commissary-Karte, Cart-Tier-Matrix, Bid Premium Calculator, First-Mover-Argument. BCS Standort Intel XLSX ist Basis.'},
+  {id:'t12',col:'todo',t:'NYC Council — Eco-Cart Permit Proposal',c:'leg',p:'hi',d:'Nach Pilot-Daten',n:'"Green Cart" Permit-Kategorie. Mandatory Clean Zones: Central Park, Battery Park, High Line, Times Square. Committee on Environmental Protection.'},
+  {id:'t13',col:'todo',t:'Generator-Annahmen verifizieren',c:'res',p:'mi',d:'',n:'1x vs 2x Honda EU2200i. Foto zeigt 2x — könnte Backup sein. SVP Pilot Report hat reale Verbrauchsdaten.'},
+  {id:'t14',col:'todo',t:'Revenue Tabelle → cartzero.html',c:'pro',p:'mi',d:'',n:'Bronze/Silver/Gold/Platinum Tiers, MRR, Margins. Aus v5 / Excel-Modell. Investor-facing.'},
+  {id:'t15',col:'todo',t:'Founder Section — Triathlon ergänzen',c:'pro',p:'lo',d:'',n:'"Mehrfacher Finisher Triathlon olympisch und Halbdistanz." Endurance als Founder-Signal auf cartzero.html.'},
+  {id:'t16',col:'todo',t:'WhatsApp-Template Vendor Weekly Impact',c:'pro',p:'mi',d:'',n:'Automatischer Push aus AMPECO. "🌳 3 trees. ♻️ 18 kg CO₂. Total: 127 kg = flight NYC→Chicago." Kein App-Download.'},
+  {id:'t17',col:'todo',t:'Block Captain — 3 Design-Fragen klären',c:'pro',p:'mi',d:'Nach Pilot-Daten',n:'(1) Cap 3 vs 6 Mo, (2) Cliff 30 vs 60 Tage, (3) Absoluter vs skalierter Cap. Nach ersten Pilot-Daten.'},
+  {id:'t18',col:'todo',t:'Competitive Watch einrichten',c:'res',p:'mi',d:'',n:'Google Alert: "food cart" "battery swap" OR "generator replacement". hn.algolia.com alle 2–3 Wochen. r/ycombinator.'},
+  {id:'t19',col:'todo',t:'Mayor Mamdani / La Marqueta — Verbindung',c:'out',p:'mi',d:'',n:'City-owned grocery East Harlem. Commissary-Modell spiegelt CartZero. Nach Pilot-Launch.'},
+  {id:'t20',col:'todo',t:'ThePowerMBA Alumni — Community Post',c:'out',p:'lo',d:'Nach May 4',n:'Post nach YC-Update mit "YC applicant" als social proof. 200k Alumni, DACH Investor-Pipeline.'},
+  // PARKED
+  {id:'p01',col:'park',t:'Waze / NYC DOT "Clean Vendor Map" Partnership',c:'pro',p:'lo',d:'',n:'Waze Connected Citizens Program. Braucht NYC DOT Partnership. Sinnvoll ab 500+ Vendors. 1+ Jahr Horizont.'},
+  {id:'p02',col:'park',t:'E-Truck Routing — Camera Integration',c:'pro',p:'lo',d:'',n:'HERE/Inrix APIs. Gen-2-Problem. Erst ab 50+ Carts und mehreren Hubs. Van fährt heute deterministisch.'},
+  {id:'p03',col:'park',t:'Republic Crowdfunding Campaign',c:'yc',p:'mi',d:'',n:'Sequenz nach YC. Excel-Zahlen direkt verwertbar. Nach erstem Funding-Signal.'},
+  {id:'p04',col:'park',t:'Ceres September 23 — Invite-Only Event',c:'cli',p:'hi',d:'Sept 23, 2026',n:'Convene, 75 Rockefeller Plaza. Mainstage + private Partner Reception. Investor-facing. Kemkar ist der Pfad.'},
+  {id:'p05',col:'park',t:'ClimaTech Boston — Booth Attendance',c:'cli',p:'lo',d:'',n:'Copy fertig. Complimentary via Consulate Germany Boston. Bodo fährt nicht hin — zu teuer.'},
+];
+
+const SK='cz_tracker_v3';
+let cards=[], eid=null;
+
+function load(){
+  try{const s=localStorage.getItem(SK);cards=s?JSON.parse(s):[...SEED];}
+  catch(e){cards=[...SEED];}
+  render();
+}
+
+function save(){
+  try{localStorage.setItem(SK,JSON.stringify(cards));document.getElementById('ls').textContent='Saved '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});}
+  catch(e){}
+}
+
+function render(){
+  // stats
+  document.getElementById('stats').innerHTML=COLS.map(c=>{
+    const n=cards.filter(x=>x.col===c.id).length;
+    return`<div class="st"><div class="sn">${n}</div><div class="sl">${c.l}</div></div>`;
+  }).join('');
+  // board
+  const b=document.getElementById('board');b.innerHTML='';
+  COLS.forEach(col=>{
+    const cc=cards.filter(c=>c.col===col.id);
+    const d=document.createElement('div');d.className='col';
+    d.innerHTML=`<div class="coh"><span class="cot">${col.l}</span><span class="coc">${cc.length}</span></div>`
+      +`<div class="cards">${cc.map(cardHTML).join('')}</div>`
+      +`<button class="addbtn" onclick="opN('${col.id}')">+ Add</button>`;
+    b.appendChild(d);
+  });
+  b.querySelectorAll('.card').forEach(el=>el.addEventListener('click',()=>opE(el.dataset.id)));
+}
+
+function cardHTML(c){
+  return`<div class="card" data-id="${c.id}">`
+    +`<div class="ct">${c.t}</div>`
+    +`<div class="cm"><div class="dot ${c.p}"></div><span class="tag ${c.c}">${CATS[c.c]||c.c}</span></div>`
+    +(c.d?`<div class="cd">${c.d}</div>`:'')
+    +`</div>`;
+}
+
+function opN(col){
+  eid=null;
+  document.getElementById('mt').textContent='New task';
+  ['ft','fn','fd'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('fc').value='out';document.getElementById('fp').value='mi';
+  document.getElementById('ch').style.display='none';document.getElementById('duprow').style.display='none';
+  rmr(col);document.getElementById('ov').style.display='flex';document.getElementById('ft').focus();
+}
+
+function opE(id){
+  eid=id;const c=cards.find(x=>x.id===id);if(!c)return;
+  document.getElementById('mt').textContent='Edit task';
+  document.getElementById('ft').value=c.t;document.getElementById('fn').value=c.n||'';
+  document.getElementById('fc').value=c.c;document.getElementById('fp').value=c.p;document.getElementById('fd').value=c.d||'';
+  document.getElementById('ch').style.display='block';document.getElementById('duprow').style.display='block';
+  rmr(c.col);document.getElementById('ov').style.display='flex';
+}
+
+function rmr(cur){
+  document.getElementById('mr').innerHTML=COLS.map(c=>`<button class="mb${c.id===cur?' ac':''}" onclick="sc(event,'${c.id}')">${c.l}</button>`).join('');
+}
+function sc(e,id){document.querySelectorAll('.mb').forEach(b=>b.classList.remove('ac'));e.target.classList.add('ac');}
+function gcol(){const b=document.querySelector('.mb.ac');return COLS.find(c=>c.l===b?.textContent)?.id||'todo';}
+
+function dup(){
+  if(!eid)return;const s=cards.find(x=>x.id===eid);if(!s)return;
+  cards.push({...s,id:'c'+Date.now(),col:gcol(),t:document.getElementById('ft').value.trim()||s.t,
+    n:document.getElementById('fn').value,c:document.getElementById('fc').value,
+    p:document.getElementById('fp').value,d:document.getElementById('fd').value});
+  cls();save();render();
+}
+
+function sav(){
+  const t=document.getElementById('ft').value.trim();if(!t)return;
+  const col=gcol();
+  if(eid){const c=cards.find(x=>x.id===eid);Object.assign(c,{t,n:document.getElementById('fn').value,c:document.getElementById('fc').value,p:document.getElementById('fp').value,d:document.getElementById('fd').value,col});}
+  else{cards.push({id:'c'+Date.now(),col,t,n:document.getElementById('fn').value,c:document.getElementById('fc').value,p:document.getElementById('fp').value,d:document.getElementById('fd').value});}
+  cls();save();render();
+}
+
+function del(){if(!eid||!confirm('Delete?'))return;cards=cards.filter(x=>x.id!==eid);cls();save();render();}
+function cls(){document.getElementById('ov').style.display='none';eid=null;}
+document.getElementById('ov').addEventListener('click',function(e){if(e.target===this)cls();});
+load();
+</script>
+</body>
+</html>
