@@ -28,6 +28,13 @@
 }
 
 body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+#gate { position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999; }
+#gate-box { border:1px solid var(--border2);border-radius:10px;padding:2rem;width:280px;text-align:center; }
+#gate-box h2 { font-size:14px;font-weight:500;margin-bottom:.4rem;color:var(--text); }
+#gate-box p { font-size:11px;color:var(--text3);margin-bottom:1.2rem; }
+#gate-box input { width:100%;font-size:13px;padding:8px 10px;border:1px solid var(--border2);border-radius:5px;background:var(--surface2);color:var(--text);text-align:center;letter-spacing:.1em;font-family:var(--mono); }
+#gate-box button { margin-top:10px;width:100%;padding:8px;font-size:12px;border:1px solid rgba(0,196,140,.3);border-radius:5px;background:rgba(0,196,140,.08);color:var(--green);cursor:pointer;font-family:var(--sans); }
+#gate-err { font-size:11px;color:var(--red);margin-top:8px;min-height:16px; }
 
 #app { max-width: 1600px; margin: 0 auto; padding: 1.5rem; }
 
@@ -110,10 +117,23 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
 </style>
 </head>
 <body>
-<div id="app">
+<div id="gate">
+  <div id="gate-box">
+    <h2><span style="color:var(--green);font-family:var(--mono)">CartZero</span> Tracker</h2>
+    <p>Internal use only</p>
+    <input id="pw" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')unlock()"/>
+    <button onclick="unlock()">Enter</button>
+    <div id="gate-err"></div>
+  </div>
+</div>
+<div id="app" style="display:none">
   <div class="header">
     <h1><span>CartZero</span> — Project Tracker</h1>
-    <small id="ls">not saved yet</small>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button onclick="importData()" style="font-size:11px;padding:4px 10px;border:1px solid var(--border2);border-radius:4px;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--sans)">⬆ Import</button>
+      <button onclick="exportData()" style="font-size:11px;padding:4px 10px;border:1px solid var(--border2);border-radius:4px;background:transparent;color:var(--text3);cursor:pointer;font-family:var(--sans)">⬇ Export</button>
+      <small id="ls">loading...</small>
+    </div>
   </div>
   <div class="timebar">
     <div class="ti"><div class="tv">50</div><div class="tl">Tickets</div></div>
@@ -158,7 +178,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
 
 <script>
 const COLS=[{id:'todo',l:'To do'},{id:'doing',l:'In progress'},{id:'wait',l:'Waiting'},{id:'done',l:'Done'},{id:'park',l:'Parked'}];
-const CATS={yc:'YC',out:'Outreach',pro:'Product',cli:'Climate',res:'Research',leg:'Legal'};
+const CATS={yc:'YC',out:'Outreach',pro:'Product',cli:'Climate',res:'Research',leg:'Legal',ops:'Ops',hub:'Hub',str:'Strategy'};
 
 const SEED=[
   // DONE
@@ -199,7 +219,7 @@ const SEED=[
   {id:'t06',col:'todo',t:'Matthew Shapiro (SVP Legal) — Warm Intro',c:'leg',p:'hi',d:'Nach Carina Connect',n:'Kein LinkedIn. Intro durch Carina. Urban Justice Center / Street Vendor Project.'},
   {id:'t07',col:'todo',t:'Nest Climate Campus — Submission',c:'cli',p:'hi',d:'Late April/Mai 2026',n:'Javits Center, 22.–24. September. Co-Hosting Modell. Energy Transition + Urban Infrastructure. Submission Window: JETZT.'},
   {id:'t08',col:'todo',t:'NYC Parks Revenue Division — BCS Owner-Kontakt',c:'out',p:'hi',d:'Diese Woche',n:'+1 (212) 360-3406. EST = DE −6h. Best slot: 14–17 Uhr DE. "I am trying to reach the owner of Big City Snacks Inc."'},
-  {id:'t09',col:'todo',t:'Big City Snacks — Discovery Talk',c:'out',p:'hi',d:'Nach Owner-Kontakt',n:'10-15 45th Ave LIC = Commissary. Fuel-Cost + Bid Premium validieren. "Tell me where I am wrong." Contract Renewal 12/31/2026 als Hook.'},
+  {id:'t09',col:'todo',t:'Big City Snacks — Discovery Talk',c:'out',p:'hi',d:'Nach Owner-Kontakt',n:'9 Central Park Permits. 8 × Ablauf 12/31/2026, 1 × 12/31/2027 — Renewal-Leverage. Carts stehen mit hoher Wahrscheinlichkeit im Bronx Zoo MFV Depot (2300 Southern Blvd) — nicht in Manhattan. Commissary-Bestätigung via NYC Parks Concessions nötig. Kontaktpfad: Carina → NYC Parks → Depot-Betreiber → BCS-Operator. Outreach BEWUSST zurückgestellt bis Funding gesichert.'},
   {id:'t10',col:'todo',t:'A&S Food and Fruit Service — Outreach',c:'out',p:'mi',d:'',n:'5 Permits (Riverside Park 3x, CP E70, Washington Square). 36-05 29th St Astoria. Pilot-Priorität 2 nach BCS.'},
   {id:'t11',col:'todo',t:'Validation Deck — BCS Pitch aufbauen',c:'pro',p:'hi',d:'Vor Discovery Talk',n:'Commissary-Karte, Cart-Tier-Matrix, Bid Premium Calculator, First-Mover-Argument. BCS Standort Intel XLSX ist Basis.'},
   {id:'t12',col:'todo',t:'NYC Council — Eco-Cart Permit Proposal',c:'leg',p:'hi',d:'Nach Pilot-Daten',n:'"Green Cart" Permit-Kategorie. Mandatory Clean Zones: Central Park, Battery Park, High Line, Times Square. Committee on Environmental Protection.'},
@@ -217,20 +237,58 @@ const SEED=[
   {id:'p03',col:'park',t:'Republic Crowdfunding Campaign',c:'yc',p:'mi',d:'',n:'Sequenz nach YC. Excel-Zahlen direkt verwertbar. Nach erstem Funding-Signal.'},
   {id:'p04',col:'park',t:'Ceres September 23 — Invite-Only Event',c:'cli',p:'hi',d:'Sept 23, 2026',n:'Convene, 75 Rockefeller Plaza. Mainstage + private Partner Reception. Investor-facing. Kemkar ist der Pfad.'},
   {id:'p05',col:'park',t:'ClimaTech Boston — Booth Attendance',c:'cli',p:'lo',d:'',n:'Copy fertig. Complimentary via Consulate Germany Boston. Bodo fährt nicht hin — zu teuer.'},
+  // NEW TICKETS 2026-04-26
+  {id:'n01',col:'todo',t:'Staffing Phase 0 — Solo-Operationsmodell dokumentieren',c:'ops',p:'mi',d:'',n:'Morgen-Fenster 5:00–8:00 Uhr, Abend 18:00–22:00 Uhr. Commissary-Staff führt Swap durch nach 2–3 Wochen Onboarding. Physische Präsenz nur in Trainingsphase nötig. AMPECO BMS-Auslese automatisch beim Einstecken — kein manuelles Prüfen. Mott Haven Cluster (East 144 + Concord Ave, 300m Fußweg) = valider Solo-Pilot unabhängig von BCS.'},
+  {id:'n02',col:'todo',t:'Bronx Zoo MFV Depot — Pilot Hub Kandidat #1 Bronx',c:'hub',p:'hi',d:'',n:'2300 Southern Blvd, Bronx 10460. NYC Parks-betriebenes dediziertes MFV Depot. Carts stehen über Nacht dort. Depot-Commissary-Modell = Battery direkt am Cart tauschen, keine Übergabe-Logistik. Wahrscheinlichster Standort für Big City Snacks (9 Central Park Permits). Kontaktpfad: NYC Parks Concessions → Carina Kaufman-Gutierrez. Tel: 718-741-8173.'},
+  {id:'n03',col:'todo',t:'Sequenz: Bronx Zoo Depot → BCS → Pilot-Konvergenz',c:'str',p:'hi',d:'Post-YC',n:'Bronx Zoo Depot = Knotenpunkt wo drei Fäden zusammenlaufen: (1) NYC Parks als institutioneller Partner, (2) BCS als erster Pilot-Operator, (3) Depot-Commissary als cleanste operationelle Proof-of-Concept Situation. Sobald Carina-Verbindung aktiv: NYC Parks Concessions um Depot-Kontakt bitten. Nicht direkt zu BCS — erst den Hub-Operator kennenlernen.'},
 ];
 
 const SK='cz_tracker_v3';
 let cards=[], eid=null;
 
+function unlock(){
+  const pw=document.getElementById('pw').value;
+  if(pw==='20_CartZero_26'){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='block';
+    load();
+  } else {
+    document.getElementById('gate-err').textContent='Wrong password.';
+    document.getElementById('pw').value='';
+  }
+}
+
 function load(){
-  try{const s=localStorage.getItem(SK);cards=s?JSON.parse(s):[...SEED];}
-  catch(e){cards=[...SEED];}
+  try{const s=localStorage.getItem(SK);
+    if(s){const stored=JSON.parse(s);const ids=new Set(stored.map(c=>c.id));cards=[...stored,...SEED.filter(c=>!ids.has(c.id))];}
+    else{cards=[...SEED];}
+  }catch(e){cards=[...SEED];}
+  document.getElementById('ls').textContent='Loaded · '+cards.length+' tickets';
   render();
 }
 
 function save(){
-  try{localStorage.setItem(SK,JSON.stringify(cards));document.getElementById('ls').textContent='Saved '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});}
+  try{localStorage.setItem(SK,JSON.stringify(cards));document.getElementById('ls').textContent='Saved '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' · '+cards.length+' tickets';}
   catch(e){}
+}
+
+function exportData(){
+  const blob=new Blob([JSON.stringify(cards,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='cz_tracker_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+}
+
+function importData(){
+  const input=document.createElement('input');input.type='file';input.accept='.json';
+  input.onchange=e=>{const file=e.target.files[0];if(!file)return;
+    const r=new FileReader();r.onload=ev=>{
+      try{const imp=JSON.parse(ev.target.result);if(!Array.isArray(imp))throw new Error('Invalid');
+        const ids=new Set(imp.map(c=>c.id));
+        cards=[...imp,...SEED.filter(c=>!ids.has(c.id))];
+        save();render();alert('✓ Imported '+cards.length+' tickets');
+      }catch(err){alert('Import failed: '+err.message);}
+    };r.readAsText(file);
+  };input.click();
 }
 
 function render(){
