@@ -136,9 +136,9 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
     </div>
   </div>
   <div class="timebar">
-    <div class="ti"><div class="tv">50</div><div class="tl">Tickets</div></div>
+    <div class="ti"><div class="tv">57</div><div class="tl">Tickets</div></div>
     <div class="ti"><div class="tv">~80h</div><div class="tl">Human-equiv.</div></div>
-    <div class="ti"><div class="tv">22</div><div class="tl">Done</div></div>
+    <div class="ti"><div class="tv">26</div><div class="tl">Done</div></div>
     <div class="ti"><div class="tv">~4h</div><div class="tl">Chat time</div></div>
     <div class="ti"><div class="tv">20×</div><div class="tl">Leverage</div></div>
     <div class="ti" style="flex:4"><div class="tn">~80h human-equivalent = what a senior strategy consultant + developer would bill for 2–3 weeks: market research, financial models, pitch decks, outreach databases, legal research, website, product design. Actual time in conversation: ~4h. Every hour with Claude replaced ~20h of traditional work.</div></div>
@@ -181,7 +181,6 @@ const COLS=[{id:'todo',l:'To do'},{id:'doing',l:'In progress'},{id:'wait',l:'Wai
 const CATS={yc:'YC',out:'Outreach',pro:'Product',cli:'Climate',res:'Research',leg:'Legal',ops:'Ops',hub:'Hub',str:'Strategy'};
 
 const SEED=[
-  // DONE
   {id:'d01',col:'done',t:'YC S2026 Application — eingereicht',c:'yc',p:'hi',d:'2026-03-29',n:'Submitted March 29. Decision deadline May 4. Update Email vorbereitet.'},
   {id:'d02',col:'done',t:'cartzero.html — live on GitHub Pages',c:'pro',p:'hi',d:'2026-03-29',n:'Password: 20_CartZero_26. Cloudflare email fix, Impressum §5 TMG, Demo Video embed, PDF overlay, Impact Counter, Speaking Section (5 entries), Map Teaser. Linked zu impact-map.html.'},
   {id:'d03',col:'done',t:'impact-map.html — Electrified Block NYC',c:'pro',p:'hi',d:'2026-04-22',n:'Separate subpage. SVG Map alle 5 Boroughs, District Leaderboard, Pulse Dots, Live Clock. Linked from Impact Strip.'},
@@ -204,40 +203,38 @@ const SEED=[
   {id:'d20',col:'done',t:'Javier (PowerMBA NYC) — LinkedIn Message drafted',c:'out',p:'mi',d:'2026-04-26',n:'Sr. Field Marketing Manager Thoropass. PowerMBA Ambassador NYC. Ziel: Pitch-Opportunities Climate Week. Option B (kein Domänen-Claim).'},
   {id:'d21',col:'done',t:'Rita Brief — drafted',c:'out',p:'hi',d:'2026-04-24',n:'Persönlicher Brief. Jogging-Moment als Einstieg. Schritt 2: cartzero.html + Briefing für NYC-Kontaktin (retiree, Ex-Top-Management, gut vernetzt).'},
   {id:'d22',col:'done',t:'ClimaTech Boston 2026 — Booth Copy drafted',c:'cli',p:'mi',d:'2026-04-09',n:'Company Description + Short Description fertig. Complimentary via Consulate General Germany Boston. Bodo fährt nicht hin — zu teuer.'},
-  // WAITING
   {id:'w01',col:'wait',t:'YC S2026 — Interview oder Reject',c:'yc',p:'hi',d:'Mai 4, 2026',n:'Deadline Mai 4. Update Email geht am selben Tag raus. May the 4th be with you.'},
   {id:'w02',col:'wait',t:'Carina Kaufman-Gutierrez — LinkedIn Connection pending',c:'out',p:'hi',d:'',n:'NYC Office of Street Vendor Services (Mamdani Admin). Connection gesendet. Fallback: LinkedIn InMail. Warm Intro zu Shapiro folgt danach.'},
   {id:'w03',col:'wait',t:'FOIL Request NYC Parks — Response pending',c:'res',p:'hi',d:'~2 weeks',n:'Eingereicht 2026-04-26. Acknowledgement ~5 Werktage. Unterlagen 2–4 Wochen. Nachhaken frühestens +5 Werktage.'},
   {id:'w04',col:'wait',t:'Neal Kemkar (Ceres) — Response pending',c:'out',p:'hi',d:'',n:'LinkedIn Message gesendet April 26. Ziel: Einladung Ceres Sept 23 (Convene, 75 Rockefeller, Mainstage + private Partner Reception, investor-facing).'},
   {id:'w05',col:'wait',t:'FOIL-Daten → BCS Excel updaten',c:'res',p:'mi',d:'Nach FOIL-Antwort',n:'Sheet 3 FOIL Tracker befüllen. Gap Gewinner→2. Platz berechnen. CartZero Hebel pro Standort.'},
-  // TODO
   {id:'t01',col:'todo',t:'YC Update Email — senden Mai 4',c:'yc',p:'hi',d:'May 4, 2026',n:'Draft fertig. Carina, SVP, Block Captain, Gamification, Climate Week. Einmal, knapp, datengetrieben.'},
-  {id:'t02',col:'todo',t:'Rita Brief — senden',c:'out',p:'hi',d:'',n:'Brief fertig. Schritt 2 nach Antwort: cartzero.html + Briefing für NYC-Kontaktin (Stay + Pitch Venue).'},
-  {id:'t03',col:'todo',t:'Javier (PowerMBA NYC) — Message senden',c:'out',p:'mi',d:'',n:'Draft fertig. Ziel: Pitch-Opportunities Climate Week NYC September.'},
+  {id:'t02',col:'done',t:'Petra mail senden',c:'out',p:'hi',d:'',n:'mail fertig. Schritt 2 nach Antwort: cartzero.html + Briefing für NYC-Kontaktin (Stay + Pitch Venue).'},
+  {id:'t03',col:'done',t:'Javier (PowerMBA NYC) — Message senden',c:'out',p:'mi',d:'',n:'Draft fertig. Ziel: Pitch-Opportunities Climate Week NYC September.'},
   {id:'t04',col:'todo',t:'LinkedIn Post — JP Morgan — publishen',c:'cli',p:'mi',d:'',n:'Text fertig. Kurz, kein CartZero. Erst Bühne bauen. Offen: Jetzt oder nach YC-Ergebnis?'},
   {id:'t05',col:'todo',t:'SVP / Mohamed Attia — Outreach',c:'out',p:'hi',d:'Nach May 4',n:'Battery Pilot seit 2021 (10 Vendors). CartZero: Swap via Commissary vs. stationäres Laden. Erst nach YC-Ergebnis.'},
   {id:'t06',col:'todo',t:'Matthew Shapiro (SVP Legal) — Warm Intro',c:'leg',p:'hi',d:'Nach Carina Connect',n:'Kein LinkedIn. Intro durch Carina. Urban Justice Center / Street Vendor Project.'},
   {id:'t07',col:'todo',t:'Nest Climate Campus — Submission',c:'cli',p:'hi',d:'Late April/Mai 2026',n:'Javits Center, 22.–24. September. Co-Hosting Modell. Energy Transition + Urban Infrastructure. Submission Window: JETZT.'},
   {id:'t08',col:'todo',t:'NYC Parks Revenue Division — BCS Owner-Kontakt',c:'out',p:'hi',d:'Diese Woche',n:'+1 (212) 360-3406. EST = DE −6h. Best slot: 14–17 Uhr DE. "I am trying to reach the owner of Big City Snacks Inc."'},
-  {id:'t09',col:'todo',t:'Big City Snacks — Discovery Talk',c:'out',p:'hi',d:'Nach Owner-Kontakt',n:'9 Central Park Permits. 8 × Ablauf 12/31/2026, 1 × 12/31/2027 — Renewal-Leverage. Carts stehen mit hoher Wahrscheinlichkeit im Bronx Zoo MFV Depot (2300 Southern Blvd) — nicht in Manhattan. Commissary-Bestätigung via NYC Parks Concessions nötig. Kontaktpfad: Carina → NYC Parks → Depot-Betreiber → BCS-Operator. Outreach BEWUSST zurückgestellt bis Funding gesichert.'},
+  {id:'t09',col:'todo',t:'Big City Snacks — Discovery Talk',c:'out',p:'hi',d:'Nach Owner-Kontakt',n:'10-15 45th Ave LIC = Commissary. Fuel-Cost + Bid Premium validieren. "Tell me where I am wrong." Contract Renewal 12/31/2026 als Hook.'},
   {id:'t10',col:'todo',t:'A&S Food and Fruit Service — Outreach',c:'out',p:'mi',d:'',n:'5 Permits (Riverside Park 3x, CP E70, Washington Square). 36-05 29th St Astoria. Pilot-Priorität 2 nach BCS.'},
   {id:'t11',col:'todo',t:'Validation Deck — BCS Pitch aufbauen',c:'pro',p:'hi',d:'Vor Discovery Talk',n:'Commissary-Karte, Cart-Tier-Matrix, Bid Premium Calculator, First-Mover-Argument. BCS Standort Intel XLSX ist Basis.'},
   {id:'t12',col:'todo',t:'NYC Council — Eco-Cart Permit Proposal',c:'leg',p:'hi',d:'Nach Pilot-Daten',n:'"Green Cart" Permit-Kategorie. Mandatory Clean Zones: Central Park, Battery Park, High Line, Times Square. Committee on Environmental Protection.'},
   {id:'t13',col:'todo',t:'Generator-Annahmen verifizieren',c:'res',p:'mi',d:'',n:'1x vs 2x Honda EU2200i. Foto zeigt 2x — könnte Backup sein. SVP Pilot Report hat reale Verbrauchsdaten.'},
   {id:'t14',col:'todo',t:'Revenue Tabelle → cartzero.html',c:'pro',p:'mi',d:'',n:'Bronze/Silver/Gold/Platinum Tiers, MRR, Margins. Aus v5 / Excel-Modell. Investor-facing.'},
-  {id:'t15',col:'todo',t:'Founder Section — Triathlon ergänzen',c:'pro',p:'lo',d:'',n:'"Mehrfacher Finisher Triathlon olympisch und Halbdistanz." Endurance als Founder-Signal auf cartzero.html.'},
+  {id:'t15',col:'done',t:'Founder Section — Triathlon ergänzen',c:'pro',p:'lo',d:'',n:'"Mehrfacher Finisher Triathlon olympisch und Halbdistanz." Endurance als Founder-Signal auf cartzero.html.'},
   {id:'t16',col:'todo',t:'WhatsApp-Template Vendor Weekly Impact',c:'pro',p:'mi',d:'',n:'Automatischer Push aus AMPECO. "🌳 3 trees. ♻️ 18 kg CO₂. Total: 127 kg = flight NYC→Chicago." Kein App-Download.'},
   {id:'t17',col:'todo',t:'Block Captain — 3 Design-Fragen klären',c:'pro',p:'mi',d:'Nach Pilot-Daten',n:'(1) Cap 3 vs 6 Mo, (2) Cliff 30 vs 60 Tage, (3) Absoluter vs skalierter Cap. Nach ersten Pilot-Daten.'},
   {id:'t18',col:'todo',t:'Competitive Watch einrichten',c:'res',p:'mi',d:'',n:'Google Alert: "food cart" "battery swap" OR "generator replacement". hn.algolia.com alle 2–3 Wochen. r/ycombinator.'},
   {id:'t19',col:'todo',t:'Mayor Mamdani / La Marqueta — Verbindung',c:'out',p:'mi',d:'',n:'City-owned grocery East Harlem. Commissary-Modell spiegelt CartZero. Nach Pilot-Launch.'},
   {id:'t20',col:'todo',t:'ThePowerMBA Alumni — Community Post',c:'out',p:'lo',d:'Nach May 4',n:'Post nach YC-Update mit "YC applicant" als social proof. 200k Alumni, DACH Investor-Pipeline.'},
-  // PARKED
   {id:'p01',col:'park',t:'Waze / NYC DOT "Clean Vendor Map" Partnership',c:'pro',p:'lo',d:'',n:'Waze Connected Citizens Program. Braucht NYC DOT Partnership. Sinnvoll ab 500+ Vendors. 1+ Jahr Horizont.'},
   {id:'p02',col:'park',t:'E-Truck Routing — Camera Integration',c:'pro',p:'lo',d:'',n:'HERE/Inrix APIs. Gen-2-Problem. Erst ab 50+ Carts und mehreren Hubs. Van fährt heute deterministisch.'},
   {id:'p03',col:'park',t:'Republic Crowdfunding Campaign',c:'yc',p:'mi',d:'',n:'Sequenz nach YC. Excel-Zahlen direkt verwertbar. Nach erstem Funding-Signal.'},
   {id:'p04',col:'park',t:'Ceres September 23 — Invite-Only Event',c:'cli',p:'hi',d:'Sept 23, 2026',n:'Convene, 75 Rockefeller Plaza. Mainstage + private Partner Reception. Investor-facing. Kemkar ist der Pfad.'},
   {id:'p05',col:'park',t:'ClimaTech Boston — Booth Attendance',c:'cli',p:'lo',d:'',n:'Copy fertig. Complimentary via Consulate Germany Boston. Bodo fährt nicht hin — zu teuer.'},
-  // NEW TICKETS 2026-04-26
+  {id:'c1777224277157',col:'wait',t:'Feedback Petra',c:'out',p:'hi',d:'',n:'mail gesendet. Schritt 2 nach Antwort: cartzero.html + Briefing für NYC-Kontaktin (Stay + Pitch Venue).'},
+  {id:'c1777266879854',col:'doing',t:'staffing deep-dive',c:'pro',p:'hi',d:'',n:''},
   {id:'n01',col:'todo',t:'Staffing Phase 0 — Solo-Operationsmodell dokumentieren',c:'ops',p:'mi',d:'',n:'Morgen-Fenster 5:00–8:00 Uhr, Abend 18:00–22:00 Uhr. Commissary-Staff führt Swap durch nach 2–3 Wochen Onboarding. Physische Präsenz nur in Trainingsphase nötig. AMPECO BMS-Auslese automatisch beim Einstecken — kein manuelles Prüfen. Mott Haven Cluster (East 144 + Concord Ave, 300m Fußweg) = valider Solo-Pilot unabhängig von BCS.'},
   {id:'n02',col:'todo',t:'Bronx Zoo MFV Depot — Pilot Hub Kandidat #1 Bronx',c:'hub',p:'hi',d:'',n:'2300 Southern Blvd, Bronx 10460. NYC Parks-betriebenes dediziertes MFV Depot. Carts stehen über Nacht dort. Depot-Commissary-Modell = Battery direkt am Cart tauschen, keine Übergabe-Logistik. Wahrscheinlichster Standort für Big City Snacks (9 Central Park Permits). Kontaktpfad: NYC Parks Concessions → Carina Kaufman-Gutierrez. Tel: 718-741-8173.'},
   {id:'n03',col:'todo',t:'Sequenz: Bronx Zoo Depot → BCS → Pilot-Konvergenz',c:'str',p:'hi',d:'Post-YC',n:'Bronx Zoo Depot = Knotenpunkt wo drei Fäden zusammenlaufen: (1) NYC Parks als institutioneller Partner, (2) BCS als erster Pilot-Operator, (3) Depot-Commissary als cleanste operationelle Proof-of-Concept Situation. Sobald Carina-Verbindung aktiv: NYC Parks Concessions um Depot-Kontakt bitten. Nicht direkt zu BCS — erst den Hub-Operator kennenlernen.'},
