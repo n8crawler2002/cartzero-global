@@ -114,6 +114,32 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
 .mb:hover { border-color: var(--border2); color: var(--text2); }
 .mb.ac { border-color: var(--green); color: var(--green); background: rgba(0,196,140,.08); }
 .ch { font-size: 10px; color: var(--text3); margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--border); }
+
+/* TABS */
+.tabs { display:flex; gap:0; margin-bottom:1.25rem; border:1px solid var(--border); border-radius:6px; overflow:hidden; width:fit-content; }
+.tab { padding:6px 18px; font-size:11px; font-weight:500; font-family:var(--mono); letter-spacing:.04em; cursor:pointer; color:var(--text3); background:transparent; border:none; border-right:1px solid var(--border); }
+.tab:last-child { border-right:none; }
+.tab:hover { color:var(--text2); background:var(--surface2); }
+.tab.active { color:var(--green); background:rgba(0,196,140,.08); }
+
+/* GANTT */
+#gantt { overflow-x:auto; }
+.gantt-wrap { min-width:900px; }
+.gantt-header { display:grid; margin-bottom:6px; }
+.gantt-month { font-size:10px; color:var(--text3); font-family:var(--mono); text-align:center; padding:4px 0; border-right:1px solid var(--border); }
+.gantt-month:last-child { border-right:none; }
+.gantt-row { display:grid; margin-bottom:3px; align-items:center; min-height:26px; }
+.gantt-label { font-size:11px; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:8px; }
+.gantt-track { position:relative; height:20px; }
+.gantt-bar { position:absolute; height:18px; border-radius:3px; top:1px; cursor:pointer; display:flex; align-items:center; padding:0 6px; font-size:9px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:opacity .15s; }
+.gantt-bar:hover { opacity:.85; filter:brightness(1.15); }
+.gantt-col-line { position:absolute; top:0; bottom:0; width:1px; background:var(--border); pointer-events:none; }
+.gantt-today { position:absolute; top:-4px; bottom:0; width:2px; background:var(--green); opacity:.6; pointer-events:none; }
+.gantt-section { font-size:10px; color:var(--text3); font-family:var(--mono); letter-spacing:.06em; text-transform:uppercase; margin:10px 0 4px; padding:4px 0; border-bottom:1px solid var(--border); }
+.gantt-dot { width:5px; height:5px; border-radius:50%; display:inline-block; margin-right:5px; flex-shrink:0; vertical-align:middle; }
+.tooltip { position:fixed; background:var(--surface); border:1px solid var(--border2); border-radius:6px; padding:8px 10px; font-size:11px; color:var(--text); max-width:260px; pointer-events:none; z-index:200; line-height:1.5; box-shadow:0 4px 20px rgba(0,0,0,.5); display:none; }
+.tt-title { font-weight:500; margin-bottom:4px; }
+.tt-note { font-size:10px; color:var(--text3); }
 </style>
 </head>
 <body>
@@ -144,8 +170,14 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
     <div class="ti" style="flex:4"><div class="tn">~80h human-equivalent = what a senior strategy consultant + developer would bill for 2–3 weeks: market research, financial models, pitch decks, outreach databases, legal research, website, product design. Actual time in conversation: ~4h. Every hour with Claude replaced ~20h of traditional work.</div></div>
   </div>
   <div class="stats" id="stats"></div>
-  <div class="board" id="board"></div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('kanban',this)">☰ Kanban</button>
+    <button class="tab" onclick="switchTab('gantt',this)">▦ Gantt</button>
+  </div>
+  <div id="view-kanban"><div class="board" id="board"></div></div>
+  <div id="view-gantt" style="display:none"><div id="gantt"></div></div>
 </div>
+<div id="tooltip" class="tooltip"><div class="tt-title" id="tt-t"></div><div class="tt-note" id="tt-n"></div></div>
 
 <div id="ov" class="overlay" style="display:none">
   <div class="modal">
@@ -360,6 +392,169 @@ function sav(){
 function del(){if(!eid||!confirm('Delete?'))return;cards=cards.filter(x=>x.id!==eid);cls();save();render();}
 function cls(){document.getElementById('ov').style.display='none';eid=null;}
 document.getElementById('ov').addEventListener('click',function(e){if(e.target===this)cls();});
+
+// ── TAB SWITCH ──────────────────────────────────────────
+function switchTab(name, btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('view-kanban').style.display = name==='kanban'?'block':'none';
+  document.getElementById('view-gantt').style.display  = name==='gantt' ?'block':'none';
+  if(name==='gantt') renderGantt();
+}
+
+// ── GANTT ────────────────────────────────────────────────
+const CAT_COLORS={
+  yc: {bg:'rgba(75,156,245,.25)',border:'#4b9cf5',text:'#6db3f8'},
+  out:{bg:'rgba(245,166,35,.2)', border:'#f5a623',text:'#f5b84a'},
+  pro:{bg:'rgba(0,196,140,.2)',  border:'#00c48c',text:'#00c48c'},
+  cli:{bg:'rgba(155,143,232,.2)',border:'#9b8fe8',text:'#b3a8f0'},
+  res:{bg:'rgba(160,160,255,.15)',border:'#9898e8',text:'#9898e8'},
+  leg:{bg:'rgba(226,75,74,.2)',  border:'#e24b4a',text:'#f07070'},
+  ops:{bg:'rgba(245,130,50,.2)', border:'#f58230',text:'#f5a060'},
+  hub:{bg:'rgba(50,210,200,.2)', border:'#32d2c8',text:'#32d2c8'},
+  str:{bg:'rgba(200,200,50,.2)', border:'#c8c832',text:'#d4d450'},
+};
+
+const PRIO_COL={hi:'#e24b4a',mi:'#f5a623',lo:'#00c48c'};
+
+// Timeline: March 2026 – December 2026
+const T_START = new Date('2026-03-01');
+const T_END   = new Date('2026-12-31');
+const T_TOTAL = T_END - T_START;
+
+const MONTHS=['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function parseDate(str){
+  if(!str) return null;
+  // ISO format
+  if(/^\d{4}-\d{2}-\d{2}/.test(str)) return new Date(str);
+  // "May 4, 2026" / "May 4 2026"
+  const m = str.match(/(\w+)\s+(\d+),?\s+(\d{4})/);
+  if(m) return new Date(`${m[1]} ${m[2]} ${m[3]}`);
+  // "Sept 24, 2026"
+  const m2 = str.match(/(\w+)\s+(\d+)/);
+  if(m2 && str.match(/\d{4}/)){
+    const yr = str.match(/\d{4}/)[0];
+    return new Date(`${m2[1]} ${m2[2]} ${yr}`);
+  }
+  return null;
+}
+
+function pct(date){
+  const clamped = Math.min(Math.max(date, T_START), T_END);
+  return ((clamped - T_START) / T_TOTAL) * 100;
+}
+
+function renderGantt(){
+  const el = document.getElementById('gantt');
+
+  // Sort cards: done first, then by date, undated last
+  const dated   = cards.filter(c=>parseDate(c.d)).sort((a,b)=>parseDate(a.d)-parseDate(b.d));
+  const undated  = cards.filter(c=>!parseDate(c.d));
+
+  const COL_LABELS={todo:'To do',doing:'In progress',wait:'Waiting',done:'Done',park:'Parked'};
+  const today = new Date();
+  const todayPct = pct(today);
+
+  // Build month grid template: 10 months equal width
+  const gridCols = `200px repeat(${MONTHS.length}, 1fr)`;
+
+  let html = `<div class="gantt-wrap">`;
+
+  // Header row
+  html += `<div class="gantt-row" style="grid-template-columns:${gridCols};margin-bottom:2px">`;
+  html += `<div></div>`;
+  MONTHS.forEach(m=>{
+    html += `<div class="gantt-month">${m}</div>`;
+  });
+  html += `</div>`;
+
+  // Helper: render a gantt row
+  function rowHTML(c){
+    const cc = CAT_COLORS[c.c]||CAT_COLORS['out'];
+    const dp = parseDate(c.d);
+    const isDone = c.col==='done';
+    const opacity = isDone ? '0.5' : '1';
+
+    // Bar: point-in-time → 4% wide bar centered on date
+    // Range: if done use submitted→now or just a point
+    let left=0, width=4;
+    if(dp){
+      left = pct(dp);
+      width = Math.max(3, 4);
+      if(left+width>100) left=100-width;
+    }
+
+    const title = c.t.length>45 ? c.t.slice(0,44)+'…' : c.t;
+    const notePreview = (c.n||'').slice(0,120);
+
+    return `<div class="gantt-row" style="grid-template-columns:${gridCols};opacity:${opacity}"
+      onmouseenter="showTT(event,'${c.t.replace(/'/g,"\\'")}','${notePreview.replace(/'/g,"\\'")}')"
+      onmouseleave="hideTT()">
+      <div class="gantt-label">
+        <span class="gantt-dot" style="background:${PRIO_COL[c.p]}"></span>
+        <span class="tag ${c.c}" style="font-size:8.5px;padding:1px 4px;margin-right:4px">${CATS[c.c]||c.c}</span>
+        ${title}
+      </div>
+      <div class="gantt-track" style="grid-column:2/${MONTHS.length+2};position:relative">
+        ${MONTHS.map((_,i)=>`<div class="gantt-col-line" style="left:${(i/MONTHS.length)*100}%"></div>`).join('')}
+        <div class="gantt-today" style="left:${todayPct}%"></div>
+        ${dp ? `<div class="gantt-bar" style="left:${left}%;width:${width}%;background:${cc.bg};border:1px solid ${cc.border};color:${cc.text}">${c.d}</div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  // Dated section
+  if(dated.length){
+    html += `<div class="gantt-section">Dated tickets — ${dated.length}</div>`;
+    dated.forEach(c=>{ html += rowHTML(c); });
+  }
+
+  // Undated section
+  if(undated.length){
+    html += `<div class="gantt-section" style="margin-top:18px">Undated — ${undated.length} tickets</div>`;
+    undated.forEach(c=>{
+      const cc = CAT_COLORS[c.c]||CAT_COLORS['out'];
+      const isDone = c.col==='done';
+      const colLabel = COL_LABELS[c.col]||c.col;
+      const title = c.t.length>50 ? c.t.slice(0,49)+'…' : c.t;
+      const notePreview = (c.n||'').slice(0,120);
+      html += `<div class="gantt-row" style="grid-template-columns:${gridCols};opacity:${isDone?'0.4':'0.75'}"
+        onmouseenter="showTT(event,'${c.t.replace(/'/g,"\\'")}','${notePreview.replace(/'/g,"\\'")}')"
+        onmouseleave="hideTT()">
+        <div class="gantt-label">
+          <span class="gantt-dot" style="background:${PRIO_COL[c.p]}"></span>
+          <span class="tag ${c.c}" style="font-size:8.5px;padding:1px 4px;margin-right:4px">${CATS[c.c]||c.c}</span>
+          ${title}
+          <span style="font-size:9px;color:var(--text3);margin-left:4px">[${colLabel}]</span>
+        </div>
+        <div class="gantt-track" style="grid-column:2/${MONTHS.length+2};position:relative">
+          ${MONTHS.map((_,i)=>`<div class="gantt-col-line" style="left:${(i/MONTHS.length)*100}%"></div>`).join('')}
+          <div class="gantt-today" style="left:${todayPct}%"></div>
+          <div style="position:absolute;left:0;right:0;top:8px;border-top:1px dashed ${cc.border};opacity:.3"></div>
+        </div>
+      </div>`;
+    });
+  }
+
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+function showTT(e, title, note){
+  const tt=document.getElementById('tooltip');
+  document.getElementById('tt-t').textContent=title;
+  document.getElementById('tt-n').textContent=note;
+  tt.style.display='block';
+  tt.style.left=(e.clientX+14)+'px';
+  tt.style.top=(e.clientY-10)+'px';
+}
+function hideTT(){document.getElementById('tooltip').style.display='none';}
+document.addEventListener('mousemove',function(e){
+  const tt=document.getElementById('tooltip');
+  if(tt.style.display==='block'){tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px';}
+});
+
 load();
 </script>
 </body>
