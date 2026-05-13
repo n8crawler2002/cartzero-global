@@ -70,8 +70,8 @@
 
     /* SECTIONS */
     .section { padding: 72px 48px; border-bottom: 1px solid var(--border); }
-    .sec-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; color: var(--orange); text-transform: uppercase; margin-bottom: 40px; display: flex; align-items: center; gap: 16px; }
-    .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .sec-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--orange); text-transform: uppercase; margin-bottom: 40px; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,102,0,0.06); border: 1px solid rgba(255,102,0,0.3); padding: 6px 16px; border-radius: 999px; }
+    .sec-label::after { display: none; }
     .sec-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--white); margin-bottom: 32px; }
 
     /* GRIDS */
@@ -216,6 +216,49 @@
     .impact-verified { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(0,200,81,0.6); letter-spacing: 0.08em; }
     .impact-sep { color: rgba(0,200,81,0.2); font-size: 12px; }
 
+    /* PILL BADGES */
+    .hero-pills { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; padding: 6px 14px; border-radius: 999px;
+    }
+    .hero-pill-primary { color: var(--orange); background: rgba(255,102,0,0.07); border: 1px solid rgba(255,102,0,0.35); }
+    .hero-pill-ghost { color: var(--gray); background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.09); }
+    .hero-pill-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); animation: pill-pulse 2s ease-in-out infinite; }
+    @keyframes pill-pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.3; transform:scale(0.75); } }
+
+    /* CONFLICT-RESOLUTION LINE */
+    .hero-conflict { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.06em; margin-bottom: 20px; }
+    .hero-conflict em { color: var(--orange); font-style: normal; }
+
+    /* NAV PULSE DOT */
+    .nav-pulse { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); display: inline-block; margin-right: 8px; vertical-align: middle; animation: pill-pulse 2.5s ease-in-out infinite; }
+
+    /* SWAP PREVIEW CARD */
+    .swap-preview {
+      margin-top: 36px; max-width: 540px;
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 4px; overflow: hidden;
+    }
+    .swap-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; background: rgba(255,102,0,0.04);
+      border-bottom: 1px solid var(--border);
+    }
+    .swap-hdot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pill-pulse 1.6s ease-in-out infinite; flex-shrink: 0; }
+    .swap-hlabel { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--orange); flex: 1; }
+    .swap-hlive { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--green); letter-spacing: 0.1em; }
+    .swap-body { padding: 4px 0; }
+    .swap-row { display: grid; grid-template-columns: 108px 1fr auto; gap: 10px; padding: 9px 16px; align-items: center; transition: background 0.2s; }
+    .swap-row:hover { background: rgba(255,102,0,0.03); }
+    .swap-key { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gray); letter-spacing: 0.06em; }
+    .swap-val { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--white); }
+    .swap-badge { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+    .swap-badge-green { color: var(--green); background: rgba(0,200,81,0.07); border: 1px solid rgba(0,200,81,0.25); }
+    .swap-badge-orange { color: var(--orange); background: rgba(255,102,0,0.07); border: 1px solid rgba(255,102,0,0.25); }
+    .swap-footer { padding: 9px 16px; border-top: 1px solid var(--border); font-family: 'DM Mono', monospace; font-size: 9px; color: var(--gray); letter-spacing: 0.07em; }
+
     /* RESPONSIVE */
     @media (max-width: 900px) {
       nav, .hero, .section { padding-left: 24px; padding-right: 24px; }
@@ -230,6 +273,9 @@
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
       .impact-strip { padding: 48px 24px; }
       .impact-grid { grid-template-columns: 1fr 1fr; }
+      .swap-preview { max-width: 100%; }
+      .swap-row { grid-template-columns: 90px 1fr; }
+      .swap-badge { display: none; }
     }
     @media (max-width: 560px) {
       .impact-grid { grid-template-columns: 1fr; }
@@ -255,17 +301,54 @@
 
 <nav>
   <a href="index.html" class="nav-logo">be<span>-</span>eclectic<span>.com</span></a>
-  <span class="nav-tag">Confidential · Investor Access</span>
+  <span class="nav-tag"><span class="nav-pulse"></span>Confidential · Investor Access</span>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-eye">Y Combinator Application · Summer 2026 · Confidential</div>
+  <div class="hero-pills">
+    <div class="hero-pill hero-pill-primary"><span class="hero-pill-dot"></span>YC S2026 · Application Submitted</div>
+    <div class="hero-pill hero-pill-ghost">Summer 2026</div>
+    <div class="hero-pill hero-pill-ghost">Confidential</div>
+  </div>
   <h1 class="hero-title">Cart<span>Zero.</span></h1>
+  <div class="hero-conflict">Stop burning. <em>Start swapping.</em></div>
   <p class="hero-tag">
     <em>We give New York City its air back.</em><br>
     23,000 generators. $41M ARR opportunity. The commissary is the distribution network.
   </p>
+
+  <!-- LIVE SWAP PREVIEW CARD -->
+  <div class="swap-preview">
+    <div class="swap-header">
+      <span class="swap-hdot"></span>
+      <span class="swap-hlabel">BATTERY_SWAP_EVENT · HUB_07 · BRONX</span>
+      <span class="swap-hlive">● LIVE</span>
+    </div>
+    <div class="swap-body">
+      <div class="swap-row">
+        <span class="swap-key">PACK_ID</span>
+        <span class="swap-val">CZ-0421</span>
+        <span class="swap-badge swap-badge-green">SOC 98% ✓</span>
+      </div>
+      <div class="swap-row">
+        <span class="swap-key">VENDOR</span>
+        <span class="swap-val">BCS-04 · Central Park W</span>
+        <span class="swap-badge swap-badge-orange">PICKUP 06:12</span>
+      </div>
+      <div class="swap-row">
+        <span class="swap-key">DOHMH LOG</span>
+        <span class="swap-val">Auto-generated via AMPECO</span>
+        <span class="swap-badge swap-badge-green">COMPLIANT ✓</span>
+      </div>
+      <div class="swap-row">
+        <span class="swap-key">ToU RATE</span>
+        <span class="swap-val">Off-peak window 22:00–06:00</span>
+        <span class="swap-badge swap-badge-green">$0.08/kWh</span>
+      </div>
+    </div>
+    <div class="swap-footer">AMPECO CPMS · OCPP · LTE-M · ESCO 100% Renewable · REC Retired</div>
+  </div>
 </div>
 
 <!-- PROBLEM PHOTO -->
@@ -479,6 +562,7 @@
         <li>Smart BMS + OCPP + LTE-M IoT per pack</li>
         <li>AMPECO CPMS — ToU optimized, predictive swap</li>
         <li>ESCO 100% renewable + REC retirement</li>
+        <li>Two pack sizes (S: 2.5 kWh / M: 5.0 kWh) - one rail system, one spring-loaded connector standard. Bronze through Platinum covered by combining two form factors in one compartment.</li>
         <li>Battery weight: ~45kg (5kWh Bronze/Silver)</li>
       </ul>
       <div class="roadmap-kpi">
@@ -701,8 +785,8 @@
           </div>
           <div class="card" style="padding:20px;">
             <div class="card-label">Operations</div>
-            <div class="card-title" style="font-size:14px;">Make · Airtable · Salesforce</div>
-            <div class="card-desc">Workflow automation, fleet management, CRM. Identical stack deployed professionally today. Plus ESCO 100% renewable + NYGATS REC retirement.</div>
+            <div class="card-title" style="font-size:14px;">Make · Airtable · Salesforce · Claude</div>
+            <div class="card-desc">Workflow automation, fleet management, CRM, documentation. AI-augmented ops handle compliance logging, vendor comms, and reporting at team-level output - solo founder execution risk structurally eliminated. Identical stack deployed professionally today.</div>
           </div>
         </div>
       </div>
@@ -740,12 +824,12 @@
     <table class="data-table">
       <thead><tr><th>Risk</th><th>Probability</th><th>Impact</th><th>Mitigation</th></tr></thead>
       <tbody>
-        <tr><td>Commissary partnerships slow to close</td><td class="red">Medium</td><td class="red">High</td><td>Direct vendor relationships as parallel path. Van fallback always available.</td></tr>
+        <tr><td>Commissary partnerships slow to close</td><td class="orange">Medium</td><td class="red">High</td><td>Three parallel tracks: (1) Street vendor advocacy network - direct path to commissary operators via vendors they represent daily; (2) NYC Office of Street Vendor Services - institutional channel, Mamdani Administration; (3) FNA Studio (Advisory Board SVP) - sustainability-oriented commissary network already mapped. Van-based swap as commissary-independent fallback.</td></tr>
         <tr><td>PopWheels pivot to food carts</td><td class="green">Low</td><td class="red">High</td><td>Speed + commissary moat + city deal. Their $4.7M is allocated to e-bike expansion.</td></tr>
         <tr><td>LiFePO4 tariffs (China)</td><td class="orange">Medium</td><td class="orange">Medium</td><td>EU supplier backup. Co-founder candidate with China procurement contacts.</td></tr>
-        <tr><td>Vendor adoption speed</td><td class="orange">Medium</td><td class="red">High</td><td>$16K/year savings is arithmetic, not sales. ROI case is overwhelming.</td></tr>
-        <tr><td>Winter OPEX increase</td><td class="orange">Medium</td><td class="green">Low</td><td>Seasonal pricing. Pre-warmed batteries. BMS cold mode. Vendor carries smaller Gen 2 pack.</td></tr>
-        <tr><td>Solo founder</td><td class="orange">Medium</td><td class="orange">Medium</td><td>Two co-founder candidates in active conversation. 65-person international team operated before.</td></tr>
+        <tr><td>Vendor adoption speed</td><td class="orange">Medium</td><td class="red">High</td><td>$16K/year savings is arithmetic, not sales. NYC Green Cart permit holders - 1,000 sustainability-positioned vendors - identified as fast-mover pilot cohort. Positive vendor ROI from day one across all tiers.</td></tr>
+        <tr><td>Winter OPEX increase</td><td class="orange">Medium</td><td class="green">Low</td><td>Seasonal pricing. Pre-warmed batteries via overnight charge cycle. BMS cold mode with thermal management. IP65 enclosure - former gasoline generator compartment provides natural wind and weather protection for installed pack.</td></tr>
+        <tr><td>Solo founder</td><td class="orange">Medium</td><td class="orange">Medium</td><td>AI-augmented operations - AMPECO, Make, Airtable, Claude handle fleet monitoring, compliance logging, and documentation at team-level output. Solo founder is not the execution risk - it is co-founder search speed. Two candidates in active pipeline. 65-person international team operated before.</td></tr>
         <tr><td>Insurance &amp; liability exposure</td><td class="green">Low</td><td class="orange">Medium</td><td>10-policy stack researched. LFP chemistry = lowest fire-risk tier → lowest premiums. AMPECO BMS data is the underwriting package. 3 waiver models drafted (Commissary Rider, Digital Swap Agreement, Equipment Damage Waiver). Y1 budget: $10–14k. Broker outreach: BlueStone Advisors (Li-Ion focus) + Vouch (YC portfolio standard).</td></tr>
       </tbody>
     </table>
